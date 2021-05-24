@@ -2,6 +2,7 @@ package web.service;
 
 import web.model.User;
 
+import javax.management.relation.Role;
 import java.util.List;
 
 public interface UserService {
@@ -10,4 +11,6 @@ public interface UserService {
     User findById(long id);
     void update(long id, User user);
     void deleteById(long id);
+    User findByLogin(String login);
+
 }

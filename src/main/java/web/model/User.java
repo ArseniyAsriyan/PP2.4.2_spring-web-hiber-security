@@ -1,12 +1,20 @@
 package web.model;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Table(name = "user")
 @Entity
-public class User {
+public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
@@ -18,14 +26,48 @@ public class User {
     @Column(name = "age")
     private int age;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "login", unique = true)
+    private String login;
+
+    @Column(name = "password")
+    private String password;
+
+    @Transient
+    private String passwordConfirm;
+
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles;
 
 
-    public User() {}
+    public User() {
+        roles = new HashSet<>();
+    }
 
-    public User(String name, String surname, int age) {
+    public User(User user) {
+        this.id = user.id;
+        this.name = user.name;
+        this.surname = user.surname;
+        this.age = user.age;
+        this.email = user.email;
+        this.login = user.login;
+        this.password = user.password;
+        this.roles = user.roles;
+    }
+
+
+
+    public User(String login, String password, String name, String surname, int age, String email, Set<Role> roles) {
+        this.login = login;
+        this.password = password;
         this.name = name;
         this.surname = surname;
         this.age = age;
+        this.email = email;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -56,8 +98,81 @@ public class User {
         this.age = age;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public String getStringRoles() {
+        StringBuilder sb = new StringBuilder();
+        for (Role role : roles) {
+            sb.append(role.getRole()).append(" ");
+        }
+        return sb.toString();
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
+
     @Override
     public String toString() {
         return "name='" + name + " " + surname + ", age=" + age + "\n";
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }

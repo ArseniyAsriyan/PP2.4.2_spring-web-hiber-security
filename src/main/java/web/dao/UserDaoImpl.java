@@ -40,4 +40,15 @@ public class UserDaoImpl implements UserDao {
     public User findById(long id) {
         return em.find(User.class, id);
     }
+
+    @Override
+    public User findByLogin(String login) {
+        Query query = em.createQuery("from User where login=:login")
+                .setParameter("login", login);
+        try {
+            return (User) query.getSingleResult();
+        } catch (Exception e){
+            return null;
+        }
+    }
 }
