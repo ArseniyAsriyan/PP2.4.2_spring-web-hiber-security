@@ -11,6 +11,10 @@ import web.service.RoleService;
 import web.service.UserService;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 public class UserController {
@@ -43,6 +47,13 @@ public class UserController {
             roleService.add(new Role("ROLE_USER"));
             roleService.add(new Role("ROLE_ADMIN"));
         }
+        if(userService.findByLogin("admin") == null) {
+            Set<Role> adminRoles = new HashSet<>();
+            adminRoles.add(roleService.getByName("ROLE_ADMIN"));
+            adminRoles.add(roleService.getByName("ROLE_USER"));
+            User admin = new User("admin", "$2y$12$TC9U5bQ5ZtkHhLpSxpHLfe/PdZNSX912yjwyyzxH8u9tukzjYqG6e", "admin", "admin", 30, "admin@mail.com", adminRoles);
+            userService.update(admin);
+        }
         return "login";
     }
 
@@ -64,6 +75,32 @@ public class UserController {
     }
 
 
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public String registration(ModelMap model) {
+        model.addAttribute("userForm", new User());
+        return "registration";
+    }
+
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    public String addUser(@ModelAttribute("userForm") User userForm, ModelMap model) {
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleService.getByName("ROLE_USER"));
+
+        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+            model.addAttribute("passwordError", "Пароли не совпадают");
+            return "registration";
+        }
+
+        userForm.setRoles(roles);
+        try {
+            userService.update(userForm);
+        } catch (Exception e) {
+            model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
+            return "registration";
+        }
+
+        return "redirect:/login";
+    }
 
 
 }

@@ -39,7 +39,7 @@
 </sec:authorize>
 
 <sec:authorize access="isAuthenticated()">
-  <form action="/user/deleteAcc" method="post">
+  <form action="/user/deleteAcc" th:href="@{/logout}" method="post">
   <h4><button>Delete account</button></h4>
   </form>
 </sec:authorize>

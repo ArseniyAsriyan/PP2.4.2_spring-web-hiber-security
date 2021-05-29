@@ -13,6 +13,7 @@
       <thead>
       <tr>
         <th>Id</th>
+        <th>Login</th>
         <th>First name</th>
         <th>Last name</th>
         <th>Age</th>
@@ -22,6 +23,7 @@
       <tbody>
       <tr th:each="user : ${users}">
         <td th:text="${user.id}"></td>
+        <td th:text="${user.login}"></td>
         <td th:text="${user.name}"></td>
         <td th:text="${user.surname}"></td>
         <td th:text="${user.age}"></td>
@@ -32,9 +34,10 @@
       </tbody>
     </table>
   </div>
+
   <p><a href="/user-create">Create user</a></p>
 </div>
-
+<a th:href="@{/hello}">Go back</a>
 <sec:authorize access="isAuthenticated()">
   <h4><a th:href="@{/logout}">Log out</a></h4>
 </sec:authorize>

@@ -22,6 +22,11 @@ public class UserDaoImpl implements UserDao {
         userForUpdate.setName(user.getName());
         userForUpdate.setSurname(user.getSurname());
         userForUpdate.setAge(user.getAge());
+
+    }
+    @Override
+    public void update(User user) {
+        em.merge(user);
     }
 
     @Override

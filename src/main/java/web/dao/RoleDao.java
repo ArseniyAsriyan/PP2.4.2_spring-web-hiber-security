@@ -4,9 +4,10 @@ import web.model.Role;
 import web.model.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface RoleDao {
-    List<Role> findAll();
+    Set<Role> findAll();
     void saveRole(Role role);
     void update(Role role);
     void deleteRole(Role role);

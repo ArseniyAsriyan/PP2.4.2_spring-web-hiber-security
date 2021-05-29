@@ -70,6 +70,10 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
@@ -106,6 +110,14 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -138,7 +150,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return getRoles();
     }
 
     @Override

@@ -7,7 +7,11 @@
 </head>
 <body>
 <form action="#" th:action="@{/user-create}" th:object="${user}" method="post">
-  <label for="name">Name</label>
+
+  <label for="name">Login</label>
+  <input type="text" th:field="*{login}" id="name" placeholder="Login">
+  </br>
+  <label for="name">Firstname</label>
   <input type="text" th:field="*{name}" id="name" placeholder="Name">
   </br>
   <label for="surname">Surame</label>
@@ -19,6 +23,10 @@
   <label for="email">E-mail</label>
   <input type="text" th:field="*{email}" id="email" placeholder="E-mail">
   </br>
+  <label for="email">Password</label>
+  <input type="text" th:field="*{password}" id="password" placeholder="Password">
+  </br>
+
   <input type="submit" value="Create User">
 
   <sec:authorize access="isAuthenticated()">
