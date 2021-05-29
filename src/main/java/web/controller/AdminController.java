@@ -36,9 +36,8 @@ public class AdminController {
         return "/admin/user-list";
     }
 
-
     @GetMapping("/admin/user-create")
-    public String createUserForm(User user){
+    public String createUserForm(User user) {
         return "/admin/user-create";
     }
 

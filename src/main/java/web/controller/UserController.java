@@ -34,7 +34,7 @@ public class UserController {
         String name;
         try {
             name = principal.getName();
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             name = "";
         }
         model.addAttribute("current_user", "Hello, " + name);
@@ -44,20 +44,19 @@ public class UserController {
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String loginPage() {
 
-        if(roleService.findAll().isEmpty()){
+        if (roleService.findAll().isEmpty()) {
             roleService.add(new Role("ROLE_USER"));
             roleService.add(new Role("ROLE_ADMIN"));
         }
-        if(userService.findByLogin("admin") == null) {
+        if (userService.findByLogin("admin") == null) {
             Set<Role> adminRoles = new HashSet<>();
             adminRoles.add(roleService.getByName("ROLE_ADMIN"));
             adminRoles.add(roleService.getByName("ROLE_USER"));
-            User admin = new User("admin", "$2y$12$TC9U5bQ5ZtkHhLpSxpHLfe/PdZNSX912yjwyyzxH8u9tukzjYqG6e", "admin", "admin", 30, "admin@mail.com", adminRoles);
+            User admin = new User("admin", "123", "admin", "admin", 30, "admin@mail.com", adminRoles);
             userService.update(admin);
         }
         return "login";
     }
-
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public String userPage(Principal principal, ModelMap modelMap) {
@@ -65,15 +64,11 @@ public class UserController {
         return "user";
     }
 
-
     @PostMapping(value = "/user/deleteAcc")
-    public String deleteUser(Principal principal){
+    public String deleteUser(Principal principal) {
         userService.deleteById(userService.findByLogin(principal.getName()).getId());
         return "/login";
     }
-
-
-
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(ModelMap model) {
@@ -88,7 +83,7 @@ public class UserController {
         Set<Role> roles = new HashSet<>();
         roles.add(roleService.getByName("ROLE_USER"));
 
-        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())) {
             message = "Incorrect password input";
             return "redirect:/registration";
         }
