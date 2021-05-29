@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<title>Create user</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Create user</title>
 </head>
 <body>
 <form action="#" th:action="@{/user-update}" th:object="${user}" th:value="${user.getId()}" method="post">
@@ -17,8 +18,14 @@
     <label for="age">Age</label>
     <input type="number" th:field="*{age}" id="age" placeholder="Age">
     <br/>
-    <label for="age">E-Mail</label>
-    <input type="number" th:field="*{email}" id="email" placeholder="E-mail">
+    <label for="email">E-Mail</label>
+    <input type="text" th:field="*{email}" id="email" placeholder="E-mail">
+    <br/>
+    <label for="login">Login</label>
+    <input type="text" th:field="*{login}" id="login" placeholder="Login">
+    <br/>
+    <label for="password">Password</label>
+    <input type="text" th:field="*{password}" id="password" placeholder="E-mail">
     <br/>
     <input type="submit" value="Update User">
 </form>

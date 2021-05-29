@@ -30,6 +30,7 @@
         <div>
             <input type="password" th:field="*{passwordConfirm}" placeholder="Confirm your password">
         </div>
+        <h5 th:type="text" th:utext="${message}" ></h5>
         <button type="submit">Register now</button>
     </form>
     <a th:href="@{/}">Home</a>

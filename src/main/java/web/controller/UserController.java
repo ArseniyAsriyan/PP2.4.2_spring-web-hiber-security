@@ -21,6 +21,7 @@ public class UserController {
 
     private final UserService userService;
     private final RoleService roleService;
+    String message = "Register new user";
 
     @Autowired
     public UserController(UserService userService, RoleService roleService) {
@@ -57,16 +58,13 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/user-create")
-    public String createUserForm(User user){
-        return "admin/user-create";
-    }
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public String userPage(Principal principal, ModelMap modelMap) {
         modelMap.addAttribute("current_user", userService.findByLogin(principal.getName()));
         return "user";
     }
+
 
     @PostMapping(value = "/user/deleteAcc")
     public String deleteUser(Principal principal){
@@ -75,9 +73,13 @@ public class UserController {
     }
 
 
+
+
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(ModelMap model) {
+
         model.addAttribute("userForm", new User());
+        model.addAttribute("message", message);
         return "registration";
     }
 
@@ -87,16 +89,16 @@ public class UserController {
         roles.add(roleService.getByName("ROLE_USER"));
 
         if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
-            model.addAttribute("passwordError", "Пароли не совпадают");
-            return "registration";
+            message = "Incorrect password input";
+            return "redirect:/registration";
         }
 
         userForm.setRoles(roles);
         try {
             userService.update(userForm);
         } catch (Exception e) {
-            model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
-            return "registration";
+            message = "User with that login already exists";
+            return "redirect:/registration";
         }
 
         return "redirect:/login";

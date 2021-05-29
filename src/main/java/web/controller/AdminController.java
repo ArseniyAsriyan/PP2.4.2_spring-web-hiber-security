@@ -3,6 +3,7 @@ package web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import web.model.Role;
@@ -10,6 +11,7 @@ import web.model.User;
 import web.service.RoleService;
 import web.service.UserService;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,18 +36,13 @@ public class AdminController {
         return "/admin/user-list";
     }
 
-//    @RequestMapping(value = "/user-create", method = RequestMethod.GET)
-//    public ModelAndView user(@ModelAttribute("entity") final User user) {
-//        Set<Role> roleSet = roleService.findAll();
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("admin/user-create");
-//        modelAndView.addObject("roles", new HashSet<>());
-//        modelAndView.addObject("role_set", roleSet);
-//        newUserId = user.getId();
-//        return modelAndView;
-//    }
 
-    @PostMapping("/user-create")
+    @GetMapping("/admin/user-create")
+    public String createUserForm(User user){
+        return "/admin/user-create";
+    }
+
+    @PostMapping("/admin/user-create")
     public String createUser(User user) {
         Set<Role> setRoles = new HashSet<>();
         setRoles.add(roleService.getByName("ROLE_USER"));
@@ -72,7 +69,7 @@ public class AdminController {
         return "admin/user-update";
     }
 
-    @PostMapping("/user-update")
+    @PostMapping("/admin/user-update")
     public String updateUser(User user, long id) {
         userService.update(id, user);
         return "redirect:/admin/";
