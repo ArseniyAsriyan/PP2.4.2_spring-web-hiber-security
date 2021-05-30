@@ -5,7 +5,7 @@
     <title>Create user</title>
 </head>
 <body>
-<form action="#" th:action="@{/user-update}" th:object="${user}" th:value="${user.getId()}" method="post">
+<form action="#" th:action="@{/admin/user-update/}" th:object="${user}" th:value="${user.getId()}" method="post">
     <label for="id">ID</label>
     <input readonly type="number" th:field="*{id}" id="id" placeholder="ID">
     <br/>
@@ -24,10 +24,22 @@
     <label for="login">Login</label>
     <input type="text" th:field="*{login}" id="login" placeholder="Login">
     <br/>
-    <label for="password">Password</label>
-    <input type="text" th:field="*{password}" id="password" placeholder="E-mail">
+
+    <label>Roles:
+        <input type="checkbox" name="roles"
+               th:each="role : ${setOfAllRoles}"
+               th:text="${role.getRole()}"
+               th:value="${role.getRole()}"
+               th:field="*{roles}"
+        />
+    </label>
     <br/>
+
     <input type="submit" value="Update User">
+    <br/>
+    <a th:href="@{/admin}">Go back</a>
+    <br/>
+    <a th:href="@{/logout}">Log out</a>
 </form>
 </body>
 </html>

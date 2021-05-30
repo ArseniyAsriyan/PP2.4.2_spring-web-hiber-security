@@ -1,6 +1,7 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -12,6 +13,7 @@ import web.service.RoleService;
 import web.service.UserService;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,12 +23,13 @@ public class AdminController {
 
     private final UserService userService;
     private final RoleService roleService;
-    private Long newUserId;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/admin")
@@ -64,13 +67,23 @@ public class AdminController {
     @GetMapping("/admin/user-update/{id}")
     public String updateUserForm(@PathVariable("id") Long id, Model model) {
         User user = userService.findById(id);
+        Set<Role> setOfAllRoles = roleService.findAll();
         model.addAttribute("user", user);
+        model.addAttribute("setOfAllRoles", setOfAllRoles);
+        model.addAttribute("roles", new ArrayList<>());
         return "admin/user-update";
     }
 
-    @PostMapping("/admin/user-update")
-    public String updateUser(User user, long id) {
-        userService.update(id, user);
+
+    @PostMapping("/admin/user-update/")
+    public String updateUser(User user, long id,@ModelAttribute("userRoles") ArrayList<Role> userRoles) {
+        Set<Role> roles = new HashSet<>();
+        for (Role role : user.getRoles()) {
+            roles.add(roleService.getByName(role.getRole()));
+        }
+        user.setRoles(roles);
+        userService.update(user.getId(), user);
+
         return "redirect:/admin/";
     }
 
