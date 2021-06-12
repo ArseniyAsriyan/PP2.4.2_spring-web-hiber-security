@@ -29,7 +29,7 @@ public class UserController {
         this.roleService = roleService;
     }
 
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+    @GetMapping("/hello")
     public String getUsername(Principal principal, ModelMap model) {
         String name;
         try {
@@ -41,7 +41,7 @@ public class UserController {
         return "hello";
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.GET)
+    @GetMapping("login")
     public String loginPage() {
 
         if (roleService.findAll().isEmpty()) {
@@ -58,19 +58,19 @@ public class UserController {
         return "login";
     }
 
-    @RequestMapping(value = "user", method = RequestMethod.GET)
+    @GetMapping("user")
     public String userPage(Principal principal, ModelMap modelMap) {
         modelMap.addAttribute("current_user", userService.findByLogin(principal.getName()));
         return "user";
     }
 
-    @PostMapping(value = "/user/deleteAcc")
+    @PostMapping("/user/deleteAcc")
     public String deleteUser(Principal principal) {
         userService.deleteById(userService.findByLogin(principal.getName()).getId());
         return "/login";
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    @GetMapping("/registration")
     public String registration(ModelMap model) {
 
         model.addAttribute("userForm", new User());
@@ -78,7 +78,7 @@ public class UserController {
         return "registration";
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    @PostMapping("/registration")
     public String addUser(@ModelAttribute("userForm") User userForm, ModelMap model) {
         Set<Role> roles = new HashSet<>();
         roles.add(roleService.getByName("ROLE_USER"));
